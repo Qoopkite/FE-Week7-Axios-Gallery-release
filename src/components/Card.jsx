@@ -1,5 +1,5 @@
 import React from "react";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { styled } from 'styled-components';
 
 const Photo= styled.img`
@@ -43,12 +43,12 @@ const Container= styled.div`
 `
 
 export default function Card({id, imgURL, imgName, imgText}) {
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
   
     return (
       <>
       <Container>
-          <Wrapper id={id}>
+          <Wrapper id={id} onClick={() => navigate(`/${id}`)}>
             <Photo src={imgURL} />
             <Postname>{imgName}</Postname>
             <Posttext>{imgText}</Posttext>
