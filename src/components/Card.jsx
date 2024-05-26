@@ -43,6 +43,7 @@ const Container= styled.div`
 `
 
 export default function Card({id, imgURL, imgName, imgText}) {
+  
     const navigate = useNavigate();
   
     return (
