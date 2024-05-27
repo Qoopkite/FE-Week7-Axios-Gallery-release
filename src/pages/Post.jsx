@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import styled from 'styled-components';
@@ -123,18 +123,24 @@ const Post = () => {
   const [Comments, setComments] = useState("");
   const [commentNum, setCommentNum] = useState(0);
   const [commentList, setCommentList] = useState([]);
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     axios
       .get(`http://3.36.127.43:8080/imageAll`)
       .then((res) => {
         const image = res.data.find(item => item.id === Id);
-        setFeed(image);
+        if (image) {
+          setFeed(image);
+        } else {
+          navigate("*");  // 이미지가 없는경우
+        }
       })
       .catch((e) => {
         console.log(e);
+        navigate("*");  // 오류가 발생하는경우
       });
-  }, [Id]);
+  }, [Id, navigate]);
 
   const fetchComments = () => {
     axios
