@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 
 const Photo = styled.img`
   width: 810px;
@@ -27,41 +27,94 @@ const Posttext = styled.div`
 
 const Container = styled.div`
   padding: 3px;
-  border: 2px solid black;
+  //border: 2px solid black;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
 const Wrapper = styled.div`
-  border: 2px solid red;
+  //border: 2px solid red;
   display: flex;
   justify-content: space-between;
   width: 100%;
 `;
 
 const TextWrapper = styled.div`
-  border: 2px solid black;
+  //border: 2px solid black;
   display: block;
 `;
 
 const TextWrapper2 = styled.div`
-  border: 2px solid black;
+ // border: 2px solid black;
   font-size: 13px;
   display: flex;
   align-items: center;
 `;
 
+const PostCommentWrapper = styled.div`
+  padding: 8px 0;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  //border: 2px solid black;
+`;
+
+const CommentInput = styled.input`
+  border: none;
+  width: 80%;
+  font-size: 15px;
+  &:focus {
+    outline: none;
+  }
+`;
+
+const PostButton = styled.button`
+  color: #4299b1;
+  border: none;
+  font-weight: bold;
+  font-size: 15px;
+  background-color: #ffffff;
+  cursor: pointer;
+
+  &:active {
+    color: #2b6b7f;
+  }
+`;
+
+const DeleteButton = styled.button`
+  color: #9ea8aa;
+  border: none;
+  font-size: 15px;
+  background-color: #ffffff;
+  cursor: pointer;
+
+  &:active {
+    color: #69797a;
+  }
+`;
+
 const CommentList = styled.div`
   margin-top: 10px;
   width: 100%;
-  border-top: 1px solid black;
   padding-top: 10px;
+  //border: 2px solid black;
 `;
 
 const CommentItem = styled.div`
-  border-bottom: 1px solid black;
-  padding: 5px 0;
+  padding: 8px 0;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const CommentText = styled.div`
+ display:flex;
+`;
+
+const Name = styled.div`
+  font-weight: bold;
+  margin-right:20px;
 `;
 
 const Post = () => {
@@ -105,7 +158,7 @@ const Post = () => {
   };
 
   const postComment = () => {
-    if (Comments===""){
+    if (Comments === "") {
       return;
     }
     axios
@@ -115,25 +168,25 @@ const Post = () => {
       .then(response => {
         console.log('Comment Created:', response.data);
         setComments("");
-        fetchComments(); // 댓글 작성 후 다시 최신 댓글 목록 가져오기
+        fetchComments(); // 댓글 작성 후 다시 댓글 목록 가져오기
       })
       .catch(error => {
         console.error('Failed to post comment:', error);
       });
   };
 
-  const deleteComment = (commentId) =>{
+  const deleteComment = (commentId) => {
     axios
-      .delete(`http://3.36.127.43:8080/${Id}/comments/${commentId}`, {
-      })
+      .delete(`http://3.36.127.43:8080/${Id}/comments/${commentId}`, {})
       .then(response => {
         console.log('Comment deleted successfully:', response.data);
-                fetchComments(); 
+        fetchComments();
       })
       .catch(error => {
-          console.log('Failed to delete comment:', error);
+        console.log('Failed to delete comment:', error);
       });
-  }
+  };
+
   return (
     <Container>
       <Wrapper>
@@ -146,14 +199,23 @@ const Post = () => {
         </TextWrapper2>
       </Wrapper>
       <Photo src={Feed.imageURL} />
-      <input type="text" placeholder="댓글작성.." value={Comments} onChange={handleComments} />
-      <button onClick={postComment}>
-        게시
-      </button>
+      <PostCommentWrapper>
+        <CommentInput
+          type="text"
+          placeholder="댓글작성.."
+          value={Comments}
+          onChange={handleComments}
+        />
+        <PostButton onClick={postComment}>게시</PostButton>
+      </PostCommentWrapper>
       <CommentList>
         {commentList.map((comment) => (
           <CommentItem key={comment.id}>
-            {comment.commentBody} <button onClick={() => deleteComment(comment.id)}>삭제</button>
+            <CommentText>
+              <Name>익명 </Name>
+              {comment.commentBody}
+            </CommentText>
+            <DeleteButton onClick={() => deleteComment(comment.id)}>삭제</DeleteButton>
           </CommentItem>
         ))}
       </CommentList>
